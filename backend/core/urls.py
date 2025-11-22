@@ -1,7 +1,6 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from .views import SendMessageView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/chat/', include('chat.urls')),
+    path('send/', SendMessageView.as_view()), # endpoint exato!
 ]
