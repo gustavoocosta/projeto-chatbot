@@ -1,70 +1,214 @@
-# Getting Started with Create React App
+# Chatbot de Atendimento Simulado
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este é um protótipo **Fullstack (Django + React)** de um sistema de chat simples, desenvolvido como desafio técnico.
+Nele, o usuário pode assumir dois perfis (“Usuário A” ou “Usuário B”), enviar mensagens e visualizar respostas mockadas, além de consultar um histórico filtrado por usuário.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Tecnologias Utilizadas
 
-### `npm start`
+### Backend (pasta `backend/`)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+* Python 3+
+* Django
+* Django REST Framework
+* SQLite (banco padrão)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Frontend (pasta `frontend/`)
 
-### `npm test`
+* React (Create React App)
+* Context API para gerenciamento de estado
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 📂 Estrutura do Projeto
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+PROJETO-CHATBOT
+│
+├── backend
+│   ├── chat
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── views.py
+│   │   ├── urls.py
+│   ├── core
+│   │   ├── settings.py
+│   │   ├── urls.py
+│
+└── frontend
+    ├── src
+    │   ├── App.js
+    │   ├── Chat.js
+    │   ├── Historico.js
+    │   ├── UserContext.js
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Como Rodar o Projeto
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Rodando o Backend (Django)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1️⃣ Acesse a pasta `backend`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+cd backend
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+2️⃣ (Opcional) Crie e ative o ambiente virtual
 
-## Learn More
+```
+python -m venv venv
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* Windows:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+venv\Scripts\activate
+```
 
-### Code Splitting
+* Linux/Mac:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```
+source venv/bin/activate
+```
 
-### Analyzing the Bundle Size
+3️⃣ Instale as dependências
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```
+pip install -r requirements.txt
+```
 
-### Making a Progressive Web App
+4️⃣ Rode as migrações
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```
+python manage.py migrate
+```
 
-### Advanced Configuration
+5️⃣ Inicie o servidor
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```
+python manage.py runserver
+```
 
-### Deployment
+Backend disponível em:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```
+http://localhost:8000
+```
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Rodando o Frontend (React)
+
+1️⃣ Vá para a pasta `frontend`
+
+```
+cd frontend
+```
+
+2️⃣ Instale as dependências
+
+```
+npm install
+```
+
+3️⃣ Inicie o servidor
+
+```
+npm start
+```
+
+Frontend disponível em:
+
+```
+http://localhost:3000
+```
+
+---
+
+## Funcionamento do Sistema
+
+### Login Mockado
+
+No frontend, o usuário não faz login real.
+Ele pode escolher assumir:
+
+* Usuário A
+* Usuário B
+
+Este estado é controlado pelo `UserContext.js`.
+
+---
+
+### Tela de Chat (`Chat.js`)
+
+* O usuário digita uma mensagem e envia
+* O frontend envia para a API:
+
+  * Mensagem
+  * Usuário ativo (A ou B)
+* O backend:
+
+  * Salva no banco
+  * Retorna uma resposta automática simulada
+* O frontend exibe pergunta e resposta
+
+---
+
+### Tela de Histórico (`Historico.js`)
+
+* Possui rota separada (`/historico`)
+* Consulta todas as mensagens do backend
+* Filtra pelo usuário atualmente ativo
+* Se alternar entre A e B, os dados mudam automaticamente
+
+---
+
+## Arquitetura e Decisões Técnicas
+
+### Backend
+
+Foi criado no app `chat` o model:
+
+```
+Message
+- user (A ou B)
+- text (mensagem enviada pelo usuário)
+- response (resposta simulada)
+- created_at (timestamp)
+```
+
+A API expõe endpoints para:
+
+* Registrar nova mensagem
+* Consultar histórico filtrando por user
+
+### Frontend
+
+* `UserContext.js` armazena o usuário logado
+* Paginas usam esse estado para:
+
+  * Enviar mensagens com o usuário correto
+  * Filtrar histórico exibido
+
+---
+
+## Requisitos do Desafio Atendidos
+
+* Login mockado
+* Tela de chat funcional
+* Respostas diferentes para cada usuário
+* Histórico filtrado
+* Backend usando Django
+* Frontend usando React
+* Documentação presente neste README
+
+---
+
+## Autor
+
+Projeto desenvolvido como solução para o desafio técnico “Chatbot de Atendimento Simulado”.
