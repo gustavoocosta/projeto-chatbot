@@ -3,16 +3,14 @@ from rest_framework.decorators import api_view
 from .models import Message
 from .serializers import MessageSerializer
 
-
 @api_view(["POST"])
 def send_message(request):
     user = request.data.get("user")
-    content = request.data.get("content")
+    text = request.data.get("text")  # Use "text", não "content"
 
-    if not user or not content:
+    if not user or not text:
         return Response({"error": "Dados incompletos"}, status=400)
 
-    # Resposta mockada conforme usuário
     mock_reply = (
         "Obrigado, Usuário A! Em breve retornaremos."
         if user == "A"
@@ -21,13 +19,12 @@ def send_message(request):
 
     message = Message.objects.create(
         user=user,
-        content=content,
+        text=text,
         response=mock_reply,
     )
 
     serializer = MessageSerializer(message)
     return Response(serializer.data)
-
 
 @api_view(["GET"])
 def history(request, user):
