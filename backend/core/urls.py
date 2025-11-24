@@ -1,6 +1,6 @@
-from django.urls import path
-from .views import SendMessageView
+from django.urls import path, include
 
 urlpatterns = [
-    path('send/', SendMessageView.as_view()), # endpoint exato!
+    path("api/chat/", include("chat.urls")),
+    # outros paths...
 ]
