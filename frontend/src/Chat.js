@@ -8,30 +8,55 @@ function Chat() {
 
   const sendMessage = async () => {
     if (!msg.trim()) return;
-    // Simule ou conecte com seu backend
-    setMessages([...messages, { id: Date.now(), content: msg, response: "Recebi sua mensagem!" }]);
-    setMsg("");
+
+    try {
+      const res = await fetch("http://localhost:8000/api/send/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user: user,
+          text: msg
+        }),
+      });
+
+      const data = await res.json();
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          sender: "user",
+          content: msg,
+        },
+        data
+      ]);
+
+      setMsg("");
+    } catch (error) {
+      console.error("Erro ao enviar mensagem:", error);
+      alert("Erro ao conectar com o servidor");
+    }
   };
 
   return (
     <div style={{
       minHeight: "100vh",
-      background: "linear-gradient(90deg,#e0eaff,#ffffff 70%)"
+      // Não precisa de nada aqui, imagem já está no body via index.html
     }}>
       <div style={{
         maxWidth: 600,
         margin: "40px auto",
         padding: 32,
-        background: "#fff",
+        background: "rgba(25, 28, 41, 0.25)", // fundo transparente escuro
         borderRadius: 10,
         boxShadow: "0 4px 24px rgba(0,0,0,0.10)"
       }}>
         <h2 style={{
           textAlign: "center",
-          fontSize: 28,
+          fontSize: 40,
           fontWeight: "bold",
-          color: "#1e90ff",
-          marginBottom: 28
+          color: "#ffffffff",
+          marginBottom: 35
         }}>Chatbot Simulado</h2>
 
         <div style={{ display: "flex", gap: 10, marginBottom: 24 }}>
@@ -66,24 +91,21 @@ function Chat() {
           <div
             key={m.id}
             style={{
-              background: "#f5f6fa",
+              background: m.sender === "user" ? "rgba(231,243,255,0.6)" : "rgba(245,246,250,0.6)",
               padding: 14,
               marginBottom: 12,
               borderRadius: 8,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.03)"
+              boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+              color: "#222"
             }}
           >
-            <b style={{ color: "#1e90ff" }}>Você ({user}):</b> {m.content}
-            <br />
-            <b style={{ color: "#2daa59" }}>Resposta:</b> {m.response}
+            <b style={{ color: "#000000ff" }}>
+              {m.sender === "user" ? `Você (${user})` : "Bot:"}
+            </b>
+            {" "}
+            {m.content}
           </div>
         ))}
-
-        <h3 style={{
-          marginTop: 40,
-          fontWeight: 600,
-          color: "#222"
-        }}>Histórico do usuário {user}</h3>
       </div>
     </div>
   );

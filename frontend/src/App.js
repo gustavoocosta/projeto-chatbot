@@ -1,28 +1,36 @@
-import React, { useContext } from "react";
-import { UserContext } from "./UserContext";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Chat from "./Chat";
 import Historico from "./Historico";
+import { UserContextProvider } from "./UserContext";
 
 function App() {
-  const { user, setUser } = useContext(UserContext);
-
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Chatbot Simulado</h2>
+    <UserContextProvider>
+      <Router>
+        <div style={{ padding: 20 }}>
+          {/* Remova o h2 daqui!
+          <h2 style={{ color: "#ffe900", fontWeight: "bold" }}>
+            Chatbot Simulado
+          </h2>
+          */}
 
-      <label>Usuário ativo: </label>
-      <select
-        value={user}
-        onChange={(e) => setUser(e.target.value)}
-        style={{ marginBottom: 20 }}
-      >
-        <option value="A">Usuário A</option>
-        <option value="B">Usuário B</option>
-      </select>
+          <nav style={{ marginBottom: 20 }}>
+            <Link to="/" style={{ marginRight: 10, color: "#fff", textDecoration: "none" }}>
+              Chat
+            </Link>
+            <Link to="/historico" style={{ color: "#fff", textDecoration: "none" }}>
+              Histórico
+            </Link>
+          </nav>
 
-      <Chat />
-      <Historico />
-    </div>
+          <Routes>
+            <Route path="/" element={<Chat />} />
+            <Route path="/historico" element={<Historico />} />
+          </Routes>
+        </div>
+      </Router>
+    </UserContextProvider>
   );
 }
 
